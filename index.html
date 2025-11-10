@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Envelope Address Formatter | Real Envelope Preview</title>
+  <meta name="description" content="Envelope address formatting helper that previews sender and recipient placement on a true-to-scale envelope with instant validation for US, Canada, UK, Australia, and international mail." />
+  <meta name="keywords" content="envelope address, envelope formatter, envelope preview, international mailing tool" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" href="https://addressenvelope.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://addressenvelope.com/" />
+  <meta property="og:title" content="Envelope Address Formatter – Real-size Envelope Preview" />
+  <meta property="og:description" content="Instantly format sender and recipient lines, place them on a true-to-scale envelope, and export compliant PDFs for US, UK, CA, AU, or international mailings." />
+  <meta property="og:site_name" content="Envelope Address" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Envelope Address Formatter – Real-size Envelope Preview" />
+  <meta name="twitter:description" content="Country-aware envelope address tool with USPS safe zone overlay, copy-ready text, and print-to-PDF." />
+  <link rel="manifest" href="/site.webmanifest" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F8XXMGLFTW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-F8XXMGLFTW');
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            system: ['Inter', 'ui-sans-serif', 'system-ui'],
+            serif: ['Noto Serif', 'ui-serif', 'Georgia'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular']
+          },
+          colors: {
+            brand: {
+              50: '#f2f8ff',
+              100: '#d8e9ff',
+              500: '#1f6feb',
+              600: '#1a5fc2'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --envelope-width-in: 9.5;
+      --envelope-height-in: 4.125;
+      --preview-scale: 0.8;
+      --address-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      font-family: var(--address-font-family);
+    }
+
+    .form-input {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+      background-color: #fff;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #1f6feb;
+      box-shadow: 0 0 0 2px rgba(31, 111, 235, 0.18);
+    }
+
+    .envelope-canvas {
+      width: calc(var(--envelope-width-in) * 1in);
+      height: calc(var(--envelope-height-in) * 1in);
+      transform-origin: top left;
+      transform: scale(var(--preview-scale));
+      box-shadow: 0 25px 65px rgba(15, 23, 42, 0.2);
+    }
+
+    .address-block {
+      font-family: var(--address-font-family);
+      letter-spacing: 0.04em;
+    }
+
+    .safe-zone {
+      pointer-events: none;
+    }
+
+    @media (max-width: 1024px) {
+      :root {
+        --preview-scale: 0.65;
+      }
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+        margin: 0;
+      }
+      html, body, main {
+        height: auto;
+      }
+      header,
+      #addressForm,
+      main > section:not(:first-child),
+      footer {
+        display: none !important;
+      }
+      main {
+        padding: 0;
+      }
+      main > section:first-child {
+        display: flex;
+        justify-content: center;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+      }
+      #envelopePreviewShell {
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+      }
+      #envelopePreviewShell > :not(#previewViewport) {
+        display: none !important;
+      }
+      #previewViewport {
+        overflow: visible;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .envelope-canvas {
+        transform: none;
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        page-break-before: avoid;
+        page-break-after: avoid;
+      }
+    }
+  </style>
+  <style id="page-size-style"></style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://addressenvelope.com/#org",
+          "name": "Envelope Address",
+          "url": "https://addressenvelope.com/"
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://addressenvelope.com/#app",
+          "name": "Envelope Address Formatter",
+          "url": "https://addressenvelope.com/",
+          "description": "Country-aware envelope address formatter with live preview, USPS-safe placement, and print-to-PDF export.",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Web",
+          "publisher": { "@id": "https://addressenvelope.com/#org" },
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "featureList": [
+            "Country-aware formatting for US, Canada, UK, Australia, and international mail",
+            "Live USPS OCR safe-zone overlay with placement guidance",
+            "Copy-ready text output plus print-to-PDF controls"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://addressenvelope.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I print an envelope at real size?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Choose the envelope size (#10, DL, C6, or A7) and click Print / Save PDF. The page sets a matching @page size so the browser exports a true 1:1 surface."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Which countries' address rules are supported?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The formatter implements USPS, Canada Post, Royal Mail, Australia Post, and a generalized international template with a destination-country last line."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does the tool store my address data?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. All formatting happens locally in your browser, and copy/print commands never send data to a server."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-10 lg:py-14 flex flex-col gap-6">
+      <div class="flex items-center gap-3 text-sm text-brand-600 font-semibold">
+        <span class="flex items-center justify-center h-8 w-8 rounded-full bg-brand-50 text-brand-600">1</span>
+        Zero-learning envelope address formatter for compliant international mailings
+      </div>
+      <div>
+        <h1 class="text-3xl lg:text-4xl font-semibold text-slate-900 leading-tight">Envelope address layout, validation, and print-ready preview in one tab</h1>
+        <p class="mt-4 text-lg text-slate-600 max-w-3xl">
+          Choose a country, drop in sender and recipient data, and instantly see a real-scale envelope preview with the correct envelope address placement, USPS-safe read zone, and printable output. Copy multi-line text or print to PDF in one tap.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-4 text-sm text-slate-600">
+        <div class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>Offline by default</div>
+        <div class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-amber-500"></span>UPU S42 inspired rules</div>
+        <div class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-brand-500"></span>US/CA/UK/AU + International</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-10 space-y-10">
+    <section class="grid lg:grid-cols-[420px,1fr] gap-8">
+      <form id="addressForm" class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-8">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-slate-900">Mailing parameters</h2>
+            <button type="button" id="resetBtn" class="text-sm text-brand-600 hover:text-brand-500">Reset demo data</button>
+          </div>
+          <p class="text-sm text-slate-500">Controls drive formatting templates, the live envelope address preview, and @page size for print-to-PDF.</p>
+        </div>
+
+        <div class="space-y-4">
+          <label class="block text-sm font-medium text-slate-700" for="countrySelect">Destination country</label>
+          <select id="countrySelect" name="country" class="w-full rounded-2xl border-slate-200 focus:ring-brand-500 focus:border-brand-500">
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="UK">United Kingdom</option>
+            <option value="AU">Australia</option>
+            <option value="INTL">International</option>
+          </select>
+        </div>
+
+        <div class="space-y-4">
+          <label class="block text-sm font-medium text-slate-700" for="envelopeSizeSelect">Envelope size</label>
+          <select id="envelopeSizeSelect" name="envelopeSize" class="w-full rounded-2xl border-slate-200 focus:ring-brand-500 focus:border-brand-500">
+            <option value="#10">#10 – 4.125 × 9.5 in (US business)</option>
+            <option value="DL">DL – 110 × 220 mm (ISO)</option>
+            <option value="C6">C6 – 114 × 162 mm (ISO)</option>
+            <option value="A7">A7 – 5.25 × 7.25 in (Invitation)</option>
+          </select>
+          <p class="text-xs text-slate-500" id="sizeMeta">#10 (9.5 × 4.125 in) • Print-ready surface</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700" for="fontFamilySelect">Envelope font</label>
+            <select id="fontFamilySelect" name="fontFamily" class="w-full rounded-2xl border-slate-200 focus:ring-brand-500 focus:border-brand-500">
+              <option value="system">Clean Sans (default)</option>
+              <option value="serif">Serif</option>
+              <option value="mono">Monospaced</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="safeZoneToggle" name="safeZone" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" checked />
+            <label for="safeZoneToggle" class="text-sm text-slate-700">Show USPS OCR safe zone</label>
+          </div>
+        </div>
+
+        <div id="intlCountryGroup" class="space-y-2 hidden">
+          <label class="block text-sm font-medium text-slate-700" for="intlCountrySelect">Destination country (last line)</label>
+          <select id="intlCountrySelect" name="intlCountry" class="w-full rounded-2xl border-slate-200 focus:ring-brand-500 focus:border-brand-500"></select>
+          <p class="text-xs text-slate-500">International letters require the destination country on the last line in uppercase.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold text-slate-900">Recipient (to)</h3>
+            <span class="text-xs text-slate-500">Printed mid face</span>
+          </div>
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <label for="toName" class="text-sm font-medium text-slate-600">Full name</label>
+              <input id="toName" type="text" placeholder="Full name" class="form-input" />
+            </div>
+            <div class="space-y-1">
+              <label for="toOrg" class="text-sm font-medium text-slate-600">Organization</label>
+              <input id="toOrg" type="text" placeholder="Organization (optional)" class="form-input" />
+            </div>
+            <div class="space-y-1">
+              <label for="toAddress1" class="text-sm font-medium text-slate-600">Street address</label>
+              <input id="toAddress1" type="text" placeholder="Street address" class="form-input" />
+            </div>
+            <div class="space-y-1">
+              <label for="toAddress2" class="text-sm font-medium text-slate-600">Unit / Apt</label>
+              <input id="toAddress2" type="text" placeholder="Unit / Apt (optional)" class="form-input" />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="space-y-1">
+                <label for="toCity" class="text-sm font-medium text-slate-600">City / Locality</label>
+                <input id="toCity" type="text" placeholder="City / Locality" class="form-input" />
+              </div>
+              <div class="space-y-1">
+                <label id="toRegionLabel" for="toRegionSelect" class="text-sm font-medium text-slate-600">State / Province</label>
+                <select id="toRegionSelect" class="form-input hidden"></select>
+                <input id="toRegionInput" type="text" placeholder="State / Province" class="form-input" />
+              </div>
+              <div class="space-y-1">
+                <label for="toPostal" class="text-sm font-medium text-slate-600">Postal / ZIP</label>
+                <input id="toPostal" type="text" placeholder="Postal / ZIP" class="form-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold text-slate-900">Sender (return)</h3>
+            <span class="text-xs text-slate-500">Printed top-left</span>
+          </div>
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <label for="fromName" class="text-sm font-medium text-slate-600">Full name</label>
+              <input id="fromName" type="text" placeholder="Full name" class="form-input" />
+            </div>
+            <div class="space-y-1">
+              <label for="fromOrg" class="text-sm font-medium text-slate-600">Organization</label>
+              <input id="fromOrg" type="text" placeholder="Organization (optional)" class="form-input" />
+            </div>
+            <div class="space-y-1">
+              <label for="fromAddress1" class="text-sm font-medium text-slate-600">Street address</label>
+              <input id="fromAddress1" type="text" placeholder="Street address" class="form-input" />
+            </div>
+            <div class="space-y-1">
+              <label for="fromAddress2" class="text-sm font-medium text-slate-600">Unit / Apt</label>
+              <input id="fromAddress2" type="text" placeholder="Unit / Apt (optional)" class="form-input" />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="space-y-1">
+                <label for="fromCity" class="text-sm font-medium text-slate-600">City / Locality</label>
+                <input id="fromCity" type="text" placeholder="City" class="form-input" />
+              </div>
+              <div class="space-y-1">
+                <label id="fromRegionLabel" for="fromRegionSelect" class="text-sm font-medium text-slate-600">State / Province</label>
+                <select id="fromRegionSelect" class="form-input hidden"></select>
+                <input id="fromRegionInput" type="text" placeholder="State / Province" class="form-input" />
+              </div>
+              <div class="space-y-1">
+                <label for="fromPostal" class="text-sm font-medium text-slate-600">Postal / ZIP</label>
+                <input id="fromPostal" type="text" placeholder="Postal / ZIP" class="form-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="softMessages" class="space-y-2" aria-live="polite"></div>
+      </form>
+
+      <div id="envelopePreviewShell" class="bg-white rounded-3xl border border-slate-200 shadow-inner p-6 flex flex-col gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900">Envelope preview</h2>
+            <p class="text-xs text-slate-500">True-to-size surface with live formatted envelope address lines.</p>
+          </div>
+          <div class="flex flex-wrap gap-2 no-print">
+            <button type="button" id="copyRecipientBtn" class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand-300">
+              <span class="btn-label">Copy recipient</span>
+            </button>
+            <button type="button" id="copySenderBtn" class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand-300">
+              <span class="btn-label">Copy sender</span>
+            </button>
+            <button type="button" id="printBtn" class="inline-flex items-center gap-2 rounded-full bg-brand-600 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-brand-500">
+              <span>Print / Save PDF</span>
+            </button>
+          </div>
+        </div>
+        <div class="text-xs text-slate-500" id="sizeHelper">Meets USPS machinable letter bounds (min 3.5×5 in, max 6.125×11.5 in × 0.25 in).</div>
+        <div id="previewViewport" class="w-full overflow-auto flex justify-center">
+          <div class="relative envelope-canvas bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.06),_rgba(15,23,42,0))] rounded-3xl border border-slate-200" id="envelopeCanvas">
+            <div class="absolute inset-0 bg-white rounded-3xl"></div>
+            <div class="absolute inset-0 rounded-3xl border border-white/70"></div>
+
+            <div id="safeZone" class="safe-zone absolute border-2 border-dashed border-amber-400/80 rounded-xl bg-amber-50/30"></div>
+
+            <div class="address-block absolute text-[0.9rem] leading-relaxed text-slate-900" id="returnAddress"></div>
+
+            <div class="address-block absolute text-[1.1rem] leading-relaxed text-slate-900" id="recipientAddress"></div>
+
+            <div class="absolute border-2 border-slate-200 rounded-xl bg-gradient-to-br from-slate-50 to-slate-200" id="stampBox">
+              <span class="absolute text-[0.55rem] uppercase tracking-[0.3em] text-slate-400" style="bottom: 0.2rem; right: 0.4rem;">STAMP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white border border-slate-200 rounded-3xl shadow-sm p-6 space-y-6">
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-900">Why this envelope address tool?</h2>
+        <p class="mt-2 text-slate-600">The layout engine follows UPU S42 thinking: user inputs become address elements, which are then slotted into country-specific line templates and rendered on the envelope face with USPS-safe placement defaults.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 text-sm text-slate-600">
+        <div>
+          <h3 class="font-semibold text-slate-900 mb-2">Rule coverage</h3>
+          <p>US ZIP+4, Canada ANA NAN, Royal Mail-compliant postcodes, and Australia 4-digit postcodes all receive soft validation so mistakes are caught before printing.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-slate-900 mb-2">Placement fidelity</h3>
+          <p>Return, recipient, and stamp anchors mirror USPS diagrams. The optional safe zone guides machine-readable positioning and is honored in the print stylesheet.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-slate-900 mb-2">Copy &amp; export</h3>
+          <p>A single click copies ready-to-paste envelope address text. Print mode flips the page into a 1:1 surface so browser “Save as PDF” produces a perfect export.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-slate-900 text-white rounded-3xl p-6 space-y-5">
+      <div>
+        <h2 class="text-2xl font-semibold">Envelope address best practices</h2>
+        <p class="text-slate-300 text-sm">Keep destinations uppercase, avoid punctuation, and reserve the final line for the country when mailing abroad. This tool surfaces those reminders inline.</p>
+      </div>
+      <ul class="grid md:grid-cols-2 gap-4 text-sm text-slate-200 list-disc list-inside">
+        <li>Match the envelope size to USPS machinable ranges to avoid postage surprises.</li>
+        <li>Proof the recipient envelope address using the copy-to-clipboard flow before handwriting labels.</li>
+        <li>Toggle fonts to test machine readability without changing layout.</li>
+        <li>Use the reset button to load fresh sample data for each destination market.</li>
+      </ul>
+    </section>
+
+    <section id="faq" class="bg-white border border-slate-200 rounded-3xl shadow-sm p-6 space-y-6">
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-900">Envelope address FAQ</h2>
+        <p class="text-slate-600 text-sm">Answers to the most common questions AI assistants and mailers ask about the formatter.</p>
+      </div>
+      <dl class="space-y-4 text-slate-700 text-sm">
+        <div class="space-y-1">
+          <dt class="font-semibold text-slate-900">How do I print a 1:1 envelope?</dt>
+          <dd>Pick the matching size (#10, DL, C6, or A7) and click <em>Print / Save PDF</em>. The page injects an <code>@page</code> size so your browser exports a true-to-scale single page—no manual margin tweaks required.</dd>
+        </div>
+        <div class="space-y-1">
+          <dt class="font-semibold text-slate-900">Which countries are formatted automatically?</dt>
+          <dd>Templates cover USPS, Canada Post, Royal Mail, Australia Post, plus a generalized international flow that forces a destination-country last line. Each template enforces postal-code regex guidance.</dd>
+        </div>
+        <div class="space-y-1">
+          <dt class="font-semibold text-slate-900">Does the tool store or upload my data?</dt>
+          <dd>No. Everything renders inside your browser. Copy and print actions stay local, and you can reset the form anytime to clear inputs.</dd>
+        </div>
+      </dl>
+      <div class="text-xs text-slate-500">
+        <span class="font-semibold">Reference material:</span>
+        <a class="text-brand-600 hover:underline" href="https://pe.usps.com/text/pub28/welcome.htm" target="_blank" rel="noopener">USPS Publication 28</a>,
+        <a class="text-brand-600 hover:underline" href="https://www.royalmail.com/business/system/files/royal-mail-clear-addressing-guide.pdf" target="_blank" rel="noopener">Royal Mail Clear Addressing</a>,
+        <a class="text-brand-600 hover:underline" href="https://www.canadapost-postescanada.ca/cpc/en/support/articles/address-letter-mail.page" target="_blank" rel="noopener">Canada Post addressing guide</a>.
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-4 pb-10 text-xs text-slate-500">
+    Built for rapid international mail prep – no address data ever leaves this page. Visit
+    <a href="https://addressenvelope.com/" class="text-brand-600 hover:underline">addressenvelope.com</a>
+    for production updates.
+  </footer>
+
+  <noscript>
+    <div class="max-w-3xl mx-auto bg-amber-100 text-amber-800 font-medium px-4 py-3 rounded-2xl my-6">
+      JavaScript is required to format and preview envelope addresses. Please enable it to continue.
+    </div>
+  </noscript>
+
+  <script>
+    const MM_TO_IN = 0.0393701;
+
+    const envelopeSizes = {
+      '#10': { label: '#10 (9.5 × 4.125 in)', widthIn: 9.5, heightIn: 4.125, note: 'Classic US business envelope; aligns with USPS OCR guidance.' },
+      'DL': { label: 'DL (220 × 110 mm)', widthIn: +(220 * MM_TO_IN).toFixed(3), heightIn: +(110 * MM_TO_IN).toFixed(3), note: 'ISO DL for tri-folded A4 letters.' },
+      'C6': { label: 'C6 (162 × 114 mm)', widthIn: +(162 * MM_TO_IN).toFixed(3), heightIn: +(114 * MM_TO_IN).toFixed(3), note: 'Fits A6 cards; popular for postcards.' },
+      'A7': { label: 'A7 (7.25 × 5.25 in)', widthIn: 7.25, heightIn: 5.25, note: 'Invitation-friendly envelope within machinable range.' }
+    };
+
+    const regionData = {
+      'US': [
+        { code: 'AL', label: 'AL — Alabama' },
+        { code: 'AK', label: 'AK — Alaska' },
+        { code: 'AZ', label: 'AZ — Arizona' },
+        { code: 'AR', label: 'AR — Arkansas' },
+        { code: 'CA', label: 'CA — California' },
+        { code: 'CO', label: 'CO — Colorado' },
+        { code: 'CT', label: 'CT — Connecticut' },
+        { code: 'DE', label: 'DE — Delaware' },
+        { code: 'DC', label: 'DC — District of Columbia' },
+        { code: 'FL', label: 'FL — Florida' },
+        { code: 'GA', label: 'GA — Georgia' },
+        { code: 'HI', label: 'HI — Hawaii' },
+        { code: 'ID', label: 'ID — Idaho' },
+        { code: 'IL', label: 'IL — Illinois' },
+        { code: 'IN', label: 'IN — Indiana' },
+        { code: 'IA', label: 'IA — Iowa' },
+        { code: 'KS', label: 'KS — Kansas' },
+        { code: 'KY', label: 'KY — Kentucky' },
+        { code: 'LA', label: 'LA — Louisiana' },
+        { code: 'ME', label: 'ME — Maine' },
+        { code: 'MD', label: 'MD — Maryland' },
+        { code: 'MA', label: 'MA — Massachusetts' },
+        { code: 'MI', label: 'MI — Michigan' },
+        { code: 'MN', label: 'MN — Minnesota' },
+        { code: 'MS', label: 'MS — Mississippi' },
+        { code: 'MO', label: 'MO — Missouri' },
+        { code: 'MT', label: 'MT — Montana' },
+        { code: 'NE', label: 'NE — Nebraska' },
+        { code: 'NV', label: 'NV — Nevada' },
+        { code: 'NH', label: 'NH — New Hampshire' },
+        { code: 'NJ', label: 'NJ — New Jersey' },
+        { code: 'NM', label: 'NM — New Mexico' },
+        { code: 'NY', label: 'NY — New York' },
+        { code: 'NC', label: 'NC — North Carolina' },
+        { code: 'ND', label: 'ND — North Dakota' },
+        { code: 'OH', label: 'OH — Ohio' },
+        { code: 'OK', label: 'OK — Oklahoma' },
+        { code: 'OR', label: 'OR — Oregon' },
+        { code: 'PA', label: 'PA — Pennsylvania' },
+        { code: 'RI', label: 'RI — Rhode Island' },
+        { code: 'SC', label: 'SC — South Carolina' },
+        { code: 'SD', label: 'SD — South Dakota' },
+        { code: 'TN', label: 'TN — Tennessee' },
+        { code: 'TX', label: 'TX — Texas' },
+        { code: 'UT', label: 'UT — Utah' },
+        { code: 'VT', label: 'VT — Vermont' },
+        { code: 'VA', label: 'VA — Virginia' },
+        { code: 'WA', label: 'WA — Washington' },
+        { code: 'WV', label: 'WV — West Virginia' },
+        { code: 'WI', label: 'WI — Wisconsin' },
+        { code: 'WY', label: 'WY — Wyoming' }
+      ],
+      'CA': [
+        { code: 'AB', label: 'AB — Alberta' },
+        { code: 'BC', label: 'BC — British Columbia' },
+        { code: 'MB', label: 'MB — Manitoba' },
+        { code: 'NB', label: 'NB — New Brunswick' },
+        { code: 'NL', label: 'NL — Newfoundland and Labrador' },
+        { code: 'NS', label: 'NS — Nova Scotia' },
+        { code: 'NT', label: 'NT — Northwest Territories' },
+        { code: 'NU', label: 'NU — Nunavut' },
+        { code: 'ON', label: 'ON — Ontario' },
+        { code: 'PE', label: 'PE — Prince Edward Island' },
+        { code: 'QC', label: 'QC — Quebec' },
+        { code: 'SK', label: 'SK — Saskatchewan' },
+        { code: 'YT', label: 'YT — Yukon' }
+      ],
+      'AU': [
+        { code: 'ACT', label: 'ACT — Australian Capital Territory' },
+        { code: 'NSW', label: 'NSW — New South Wales' },
+        { code: 'NT', label: 'NT — Northern Territory' },
+        { code: 'QLD', label: 'QLD — Queensland' },
+        { code: 'SA', label: 'SA — South Australia' },
+        { code: 'TAS', label: 'TAS — Tasmania' },
+        { code: 'VIC', label: 'VIC — Victoria' },
+        { code: 'WA', label: 'WA — Western Australia' }
+      ]
+    };
+
+    const internationalDestinations = [
+      'United States', 'Canada', 'United Kingdom', 'Australia', 'France', 'Germany', 'Spain', 'Italy', 'Netherlands', 'Japan', 'Singapore', 'Hong Kong', 'China', 'Taiwan', 'South Korea', 'New Zealand', 'Brazil', 'Mexico', 'United Arab Emirates', 'India', 'Other'
+    ];
+
+    let activeCountry = 'US';
+
+    const patterns = {
+      usZip: /^\d{5}(-\d{4})?$/,
+      caPostal: /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\s?\d[ABCEGHJ-NPRSTV-Z]\d$/i,
+      auPostcode: /^\d{4}$/,
+      ukPostcode: /^(GIR 0AA|(?:(?:[A-Z]{1,2}\d{1,2})|(?:[A-Z]{1,2}\d[A-Z])|(?:[A-Z]{1,2}\d{1,2}[A-Z]))\s?\d[A-Z]{2})$/i
+    };
+
+    const templateEngine = {
+      baseLines(fields) {
+        const lines = [];
+        ['name','organization','address1','address2'].forEach(key => {
+          if (fields[key]) lines.push(fields[key]);
+        });
+        return lines;
+      },
+      format(country, fields, includeDestinationLine = false) {
+        const cleanFields = Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, (v || '').trim()]));
+        const lines = this.baseLines(cleanFields);
+        let warnings = [];
+        const helpers = {
+          cityUpper: cleanFields.city.toUpperCase(),
+          regionUpper: cleanFields.region.toUpperCase(),
+          toUpper: (value) => (value || '').toUpperCase()
+        };
+
+        switch (country) {
+          case 'US': {
+            const cityLine = [helpers.cityUpper, helpers.regionUpper, cleanFields.postal.toUpperCase()].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+            if (cityLine) lines.push(cityLine);
+            warnings = validateUS(cleanFields);
+            break;
+          }
+          case 'CA': {
+            const postal = formatCanadianPostal(cleanFields.postal);
+            const cityLine = [helpers.cityUpper, helpers.regionUpper, postal].filter(Boolean).join(' ');
+            if (cityLine.trim()) lines.push(cityLine.trim());
+            warnings = validateCA(cleanFields);
+            break;
+          }
+          case 'UK': {
+            const postTown = helpers.cityUpper;
+            const postcode = cleanFields.postal.toUpperCase();
+            if (postTown) lines.push(postTown);
+            if (postcode) lines.push(postcode);
+            warnings = validateUK(cleanFields);
+            break;
+          }
+          case 'AU': {
+            const cityLine = [helpers.cityUpper, helpers.regionUpper, cleanFields.postal].filter(Boolean).join(' ');
+            if (cityLine.trim()) lines.push(cityLine.trim());
+            warnings = validateAU(cleanFields);
+            break;
+          }
+          case 'INTL':
+          default: {
+            const cityLine = [cleanFields.city, cleanFields.region, cleanFields.postal].filter(Boolean).join(' ').toUpperCase();
+            if (cityLine.trim()) lines.push(cityLine.trim());
+            if (includeDestinationLine && cleanFields.destinationCountry) {
+              lines.push(cleanFields.destinationCountry.toUpperCase());
+            }
+            warnings = validateIntl(cleanFields, includeDestinationLine);
+            break;
+          }
+        }
+
+        return { lines: lines.filter(Boolean), warnings };
+      }
+    };
+
+    function formatCanadianPostal(value) {
+      if (!value) return '';
+      const cleaned = value.toUpperCase().replace(/\s+/g, '');
+      if (cleaned.length < 6) return cleaned;
+      return cleaned.slice(0, 3) + ' ' + cleaned.slice(3, 6);
+    }
+
+    function validateUS(fields) {
+      const warnings = [];
+      if (fields.postal && !patterns.usZip.test(fields.postal)) warnings.push('US ZIP should be 12345 or 12345-6789.');
+      if (/[.,]/.test(fields.city)) warnings.push('USPS prefers no punctuation in city/state line.');
+      if (!fields.region) warnings.push('Select a state abbreviation for US destinations.');
+      return warnings;
+    }
+
+    function validateCA(fields) {
+      const warnings = [];
+      if (fields.postal && !patterns.caPostal.test(fields.postal)) warnings.push('Canada Post format: ANA NAN, letters only in positions A.');
+      if (!fields.region) warnings.push('Pick a province/territory for Canada.');
+      return warnings;
+    }
+
+    function validateUK(fields) {
+      const warnings = [];
+      if (fields.postal && !patterns.ukPostcode.test(fields.postal)) warnings.push('Royal Mail postcode looks like SW1A 1AA or EC1A 1BB.');
+      if (!fields.city) warnings.push('UK addresses need a POST TOWN line.');
+      return warnings;
+    }
+
+    function validateAU(fields) {
+      const warnings = [];
+      if (fields.postal && !patterns.auPostcode.test(fields.postal)) warnings.push('Australian postcodes are 4 digits.');
+      if (!fields.region) warnings.push('Select an Australia Post state/territory abbreviation.');
+      return warnings;
+    }
+
+    function validateIntl(fields, requireDestination) {
+      const warnings = [];
+      if (requireDestination && !fields.destinationCountry) warnings.push('International mail requires a destination country on the last line.');
+      if (!fields.city) warnings.push('Add locality/city for international destination.');
+      return warnings;
+    }
+
+    function gatherFields(prefix) {
+      const city = document.getElementById(`${prefix}City`).value;
+      return {
+        name: document.getElementById(`${prefix}Name`).value,
+        organization: document.getElementById(`${prefix}Org`).value,
+        address1: document.getElementById(`${prefix}Address1`).value,
+        address2: document.getElementById(`${prefix}Address2`).value,
+        city,
+        region: getRegionValue(prefix),
+        postal: document.getElementById(`${prefix}Postal`).value,
+        destinationCountry: document.getElementById('intlCountrySelect').value
+      };
+    }
+
+    function getRegionValue(prefix) {
+      const select = document.getElementById(`${prefix}RegionSelect`);
+      if (!select.classList.contains('hidden')) {
+        return select.value;
+      }
+      return document.getElementById(`${prefix}RegionInput`).value;
+    }
+
+    function handleFormChange() {
+      const country = document.getElementById('countrySelect').value;
+      if (country !== activeCountry) {
+        activeCountry = country;
+        configureRegionFields(country);
+        toggleIntlGroup(country);
+      }
+      const toData = gatherFields('to');
+      const fromData = gatherFields('from');
+      const recipient = templateEngine.format(country, toData, true);
+      const sender = templateEngine.format(country, fromData, false);
+      renderAddress('recipientAddress', recipient.lines);
+      renderAddress('returnAddress', sender.lines);
+      renderWarnings([...recipient.warnings, ...sender.warnings]);
+      adjustPlacements();
+      updateCopyPayload(recipient.lines, sender.lines);
+    }
+
+    function renderAddress(elementId, lines) {
+      const target = document.getElementById(elementId);
+      target.innerHTML = lines.map(line => `<div>${escapeHtml(line)}</div>`).join('');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>\"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] || char));
+    }
+
+    function renderWarnings(messages) {
+      const container = document.getElementById('softMessages');
+      container.innerHTML = '';
+      if (!messages.length) return;
+      const unique = [...new Set(messages)];
+      unique.forEach(msg => {
+        const block = document.createElement('div');
+        block.className = 'flex items-start gap-2 rounded-2xl bg-amber-50 border border-amber-200 px-3 py-2 text-sm text-amber-900';
+        block.innerHTML = '<span class="mt-0.5 h-2 w-2 rounded-full bg-amber-500"></span>' + msg;
+        container.appendChild(block);
+      });
+    }
+
+    function configureRegionFields(country) {
+      ['to', 'from'].forEach(prefix => {
+        const select = document.getElementById(`${prefix}RegionSelect`);
+        const input = document.getElementById(`${prefix}RegionInput`);
+        const label = document.getElementById(`${prefix}RegionLabel`);
+        const dataset = regionData[country];
+        if (dataset) {
+          const existing = select.value;
+          select.innerHTML = dataset.map(item => `<option value="${item.code}">${item.label}</option>`).join('');
+          select.classList.remove('hidden');
+          select.disabled = false;
+          input.classList.add('hidden');
+          input.disabled = true;
+          const fallback = dataset[0]?.code || '';
+          const match = dataset.find(item => item.code === existing);
+          select.value = match ? match.code : fallback;
+          if (label) label.setAttribute('for', `${prefix}RegionSelect`);
+        } else {
+          select.classList.add('hidden');
+          select.disabled = true;
+          input.classList.remove('hidden');
+          input.disabled = false;
+          if (label) label.setAttribute('for', `${prefix}RegionInput`);
+        }
+      });
+    }
+
+    function toggleIntlGroup(country) {
+      const group = document.getElementById('intlCountryGroup');
+      if (country === 'INTL') {
+        group.classList.remove('hidden');
+      } else {
+        group.classList.add('hidden');
+      }
+    }
+
+    let copyPayload = { recipient: '', sender: '' };
+
+    function updateCopyPayload(recipientLines, senderLines) {
+      copyPayload = {
+        recipient: recipientLines.join('\n'),
+        sender: senderLines.join('\n')
+      };
+    }
+
+    async function copyText(type) {
+      try {
+        await navigator.clipboard.writeText(copyPayload[type] || '');
+        notifyCopy(type);
+      } catch (err) {
+        alert('Clipboard copy failed: ' + err.message);
+      }
+    }
+
+    function notifyCopy(type) {
+      const btn = type === 'recipient' ? document.getElementById('copyRecipientBtn') : document.getElementById('copySenderBtn');
+      const label = btn.querySelector('.btn-label');
+      if (!label) return;
+      label.textContent = 'Copied!';
+      setTimeout(() => (label.textContent = type === 'recipient' ? 'Copy recipient' : 'Copy sender'), 1200);
+    }
+
+    function printEnvelope() {
+      window.print();
+    }
+
+    function setEnvelopeSize(type) {
+      const size = envelopeSizes[type] || envelopeSizes['#10'];
+      document.documentElement.style.setProperty('--envelope-width-in', size.widthIn);
+      document.documentElement.style.setProperty('--envelope-height-in', size.heightIn);
+      const pageStyle = document.getElementById('page-size-style');
+      pageStyle.textContent = `@page { size: ${size.widthIn}in ${size.heightIn}in; margin: 0; }`;
+      document.getElementById('sizeMeta').textContent = `${size.label} • ${size.note}`;
+      document.getElementById('sizeHelper').textContent = `Preview + print at ${size.label}. USPS machinable bounds: min 3.5×5 in, max 6.125×11.5 in × 0.25 in.`;
+      adjustPlacements();
+      updatePreviewScale();
+    }
+
+    function adjustPlacements() {
+      const widthIn = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--envelope-width-in'));
+      const heightIn = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--envelope-height-in'));
+      const unit = 96; // px per inch baseline
+      const returnBlock = document.getElementById('returnAddress');
+      const recipientBlock = document.getElementById('recipientAddress');
+      const stampBox = document.getElementById('stampBox');
+      const safeZone = document.getElementById('safeZone');
+
+      returnBlock.style.left = `${0.65 * unit}px`;
+      returnBlock.style.top = `${0.65 * unit}px`;
+      returnBlock.style.width = `${unit * Math.min(3.5, widthIn - 1.3)}px`;
+
+      recipientBlock.style.left = `${(widthIn * unit) / 2}px`;
+      recipientBlock.style.top = `${heightIn * unit * 0.45}px`;
+      recipientBlock.style.width = `${unit * (widthIn - 2)}px`;
+      recipientBlock.style.transform = 'translate(-50%, 0)';
+      recipientBlock.style.textAlign = 'left';
+
+      stampBox.style.width = `${Math.min(1.6, widthIn / 4) * unit}px`;
+      stampBox.style.height = `${Math.min(1.1, heightIn / 4) * unit}px`;
+      stampBox.style.right = `${0.6 * unit}px`;
+      stampBox.style.top = `${0.6 * unit}px`;
+
+      safeZone.style.left = `${0.5 * unit}px`;
+      safeZone.style.right = `${0.5 * unit}px`;
+      safeZone.style.bottom = `${0.625 * unit}px`;
+      const topOffset = heightIn * unit - 2.75 * unit;
+      safeZone.style.top = `${topOffset}px`;
+      safeZone.classList.toggle('hidden', !document.getElementById('safeZoneToggle').checked);
+    }
+
+    function updatePreviewScale() {
+      const canvas = document.getElementById('envelopeCanvas');
+      const viewport = document.getElementById('previewViewport');
+      const widthIn = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--envelope-width-in'));
+      const widthPx = widthIn * 96;
+      const available = viewport.clientWidth - 32;
+      const scale = Math.min(1, Math.max(0.4, available / widthPx));
+      canvas.style.setProperty('--preview-scale', scale);
+    }
+
+    function toggleSafeZone() {
+      const safeZone = document.getElementById('safeZone');
+      safeZone.classList.toggle('hidden', !document.getElementById('safeZoneToggle').checked);
+    }
+
+    function setFontFamily(value) {
+      let family = "'Inter', system-ui";
+      if (value === 'serif') family = "'Noto Serif', Georgia, serif";
+      if (value === 'mono') family = "'JetBrains Mono', 'SFMono-Regular', monospace";
+      document.documentElement.style.setProperty('--address-font-family', family);
+    }
+
+    function populateIntlOptions() {
+      const select = document.getElementById('intlCountrySelect');
+      const options = ['<option value="" disabled selected>Select destination</option>'];
+      internationalDestinations.forEach(country => {
+        options.push(`<option value="${country}">${country}</option>`);
+      });
+      select.innerHTML = options.join('');
+      select.value = '';
+    }
+
+    function hydrateSampleData() {
+      document.getElementById('countrySelect').value = 'US';
+      document.getElementById('toName').value = 'Taylor Kim';
+      document.getElementById('toOrg').value = 'Northwind Studio';
+      document.getElementById('toAddress1').value = '455 Market Street';
+      document.getElementById('toAddress2').value = 'Suite 800';
+      document.getElementById('toCity').value = 'San Francisco';
+      document.getElementById('toPostal').value = '94105';
+
+      document.getElementById('fromName').value = 'Alex Rivera';
+      document.getElementById('fromOrg').value = 'Rivera Atelier';
+      document.getElementById('fromAddress1').value = '17 Gardenia Ave';
+      document.getElementById('fromAddress2').value = '';
+      document.getElementById('fromCity').value = 'Austin';
+      document.getElementById('fromPostal').value = '78704';
+
+      ['toRegionSelect', 'fromRegionSelect'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (!el.classList.contains('hidden')) {
+          el.value = idx === 0 ? 'CA' : 'TX';
+        }
+      });
+    }
+
+    function resetForm() {
+      document.getElementById('addressForm').reset();
+      document.getElementById('safeZoneToggle').checked = true;
+      document.getElementById('countrySelect').value = 'US';
+      document.getElementById('envelopeSizeSelect').value = '#10';
+      document.getElementById('fontFamilySelect').value = 'system';
+      activeCountry = 'US';
+      setFontFamily('system');
+      populateIntlOptions();
+      setEnvelopeSize('#10');
+      configureRegionFields('US');
+      hydrateSampleData();
+      handleFormChange();
+    }
+
+    function init() {
+      activeCountry = document.getElementById('countrySelect').value || 'US';
+      populateIntlOptions();
+      setEnvelopeSize('#10');
+      configureRegionFields('US');
+      hydrateSampleData();
+      handleFormChange();
+      setFontFamily('system');
+      updatePreviewScale();
+    }
+
+    function bindEvents() {
+      const form = document.getElementById('addressForm');
+      form.addEventListener('input', handleFormChange);
+      form.addEventListener('change', handleFormChange);
+      document.getElementById('envelopeSizeSelect').addEventListener('change', (e) => setEnvelopeSize(e.target.value));
+      document.getElementById('fontFamilySelect').addEventListener('change', (e) => setFontFamily(e.target.value));
+      document.getElementById('safeZoneToggle').addEventListener('change', () => { toggleSafeZone(); handleFormChange(); });
+      document.getElementById('copyRecipientBtn').addEventListener('click', () => copyText('recipient'));
+      document.getElementById('copySenderBtn').addEventListener('click', () => copyText('sender'));
+      document.getElementById('printBtn').addEventListener('click', printEnvelope);
+      document.getElementById('resetBtn').addEventListener('click', resetForm);
+      window.addEventListener('resize', updatePreviewScale);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      bindEvents();
+      init();
+    });
+  </script>
+</body>
+</html>
