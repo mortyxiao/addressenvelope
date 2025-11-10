@@ -1,0 +1,10 @@
+{
+  "name": "Envelope Address Formatter",
+  "short_name": "Envelope Address",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "Country-aware envelope address previewer with USPS-safe placement and print-to-PDF export.",
+  "icons": []
+}
