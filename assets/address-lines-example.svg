@@ -1,0 +1,43 @@
+<svg width="640" height="320" viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Address line formatting examples</title>
+  <desc id="desc">Comparison of US, Canada, UK, and International address line orders.</desc>
+  <style>
+    text { font-family: 'Inter', sans-serif; }
+    .label { font-size: 12px; fill: #475569; text-transform: uppercase; letter-spacing: 0.15em; }
+    .example { font-size: 13px; fill: #0f172a; }
+  </style>
+  <rect width="640" height="320" rx="28" fill="#f8fafc" stroke="#d7e3ff" />
+  <g transform="translate(32,36)">
+    <rect width="260" height="112" rx="18" fill="#fff" stroke="#cbd5f5" />
+    <text class="label" x="16" y="28">United States</text>
+    <text class="example" x="16" y="54">TAYLOR KIM</text>
+    <text class="example" x="16" y="74">455 MARKET ST STE 800</text>
+    <text class="example" x="16" y="94">SAN FRANCISCO CA 94105-1234</text>
+    <text class="example" x="16" y="114" fill="#f97316">CITY ST ZIP</text>
+  </g>
+  <g transform="translate(348,36)">
+    <rect width="260" height="112" rx="18" fill="#fff" stroke="#cbd5f5" />
+    <text class="label" x="16" y="28">Canada</text>
+    <text class="example" x="16" y="54">AMÉLIE MARTIN</text>
+    <text class="example" x="16" y="74">2200 RUE DU PARC</text>
+    <text class="example" x="16" y="94">MONTRÉAL QC H2W 1S3</text>
+    <text class="example" x="16" y="114" fill="#f97316">ANA NAN</text>
+  </g>
+  <g transform="translate(32,184)">
+    <rect width="260" height="112" rx="18" fill="#fff" stroke="#cbd5f5" />
+    <text class="label" x="16" y="28">United Kingdom</text>
+    <text class="example" x="16" y="54">MR OLIVER SMITH</text>
+    <text class="example" x="16" y="74">10 DOWNING STREET</text>
+    <text class="example" x="16" y="94">LONDON</text>
+    <text class="example" x="16" y="114">SW1A 2AA</text>
+  </g>
+  <g transform="translate(348,184)">
+    <rect width="260" height="112" rx="18" fill="#fff" stroke="#cbd5f5" />
+    <text class="label" x="16" y="28">International</text>
+    <text class="example" x="16" y="54">SOFIA MARTINEZ</text>
+    <text class="example" x="16" y="74">CALLE 50 #21-80</text>
+    <text class="example" x="16" y="94">BOGOTÁ 110111</text>
+    <text class="example" x="16" y="114">COLOMBIA</text>
+    <text class="example" x="16" y="134" fill="#f97316">COUNTRY LAST LINE</text>
+  </g>
+</svg>
