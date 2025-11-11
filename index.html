@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Envelope Address Formatter | Real Envelope Preview</title>
-  <meta name="description" content="Envelope address formatting helper that previews sender and recipient placement on a true-to-scale envelope with instant validation for US, Canada, UK, Australia, and international mail." />
-  <meta name="keywords" content="envelope address, envelope formatter, envelope preview, international mailing tool" />
+  <title>Address Envelope Formatter | Real Envelope Preview</title>
+  <meta name="description" content="Address Envelope formatting helper that previews sender and recipient placement on a true-to-scale envelope with instant validation for US, Canada, UK, Australia, and international mail." />
+  <meta name="keywords" content="address envelope, envelope formatter, envelope preview, international mailing tool" />
   <meta name="robots" content="index,follow" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="canonical" href="https://addressenvelope.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://addressenvelope.com/" />
-  <meta property="og:title" content="Envelope Address Formatter – Real-size Envelope Preview" />
+  <meta property="og:title" content="Address Envelope Formatter – Real-size Envelope Preview" />
   <meta property="og:description" content="Instantly format sender and recipient lines, place them on a true-to-scale envelope, and export compliant PDFs for US, UK, CA, AU, or international mailings." />
-  <meta property="og:site_name" content="Envelope Address" />
+  <meta property="og:site_name" content="Address Envelope" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Envelope Address Formatter – Real-size Envelope Preview" />
-  <meta name="twitter:description" content="Country-aware envelope address tool with USPS safe zone overlay, copy-ready text, and print-to-PDF." />
+  <meta name="twitter:title" content="Address Envelope Formatter – Real-size Envelope Preview" />
+  <meta name="twitter:description" content="Country-aware address envelope tool with USPS safe zone overlay, copy-ready text, and print-to-PDF." />
   <link rel="manifest" href="/site.webmanifest" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F8XXMGLFTW"></script>
@@ -161,13 +161,13 @@
         {
           "@type": "Organization",
           "@id": "https://addressenvelope.com/#org",
-          "name": "Envelope Address",
+          "name": "Address Envelope",
           "url": "https://addressenvelope.com/"
         },
         {
           "@type": "WebApplication",
           "@id": "https://addressenvelope.com/#app",
-          "name": "Envelope Address Formatter",
+          "name": "Address Envelope Formatter",
           "url": "https://addressenvelope.com/",
           "description": "Country-aware envelope address formatter with live preview, USPS-safe placement, and print-to-PDF export.",
           "applicationCategory": "UtilitiesApplication",
@@ -215,11 +215,24 @@
   </script>
 </head>
 <body class="bg-slate-50 text-slate-900">
-  <header class="bg-white border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 py-10 lg:py-14 flex flex-col gap-6">
+  <header class="bg-white border-b border-slate-200" id="top">
+    <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-6">
+      <nav class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-600">
+        <a href="/" class="flex items-center gap-2 text-slate-900 font-semibold text-base" aria-label="Address Envelope home">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 font-bold">AE</span>
+          Address Envelope
+        </a>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#formatter" class="hover:text-brand-600">Formatter</a>
+          <a href="#guides" class="hover:text-brand-600">Guides</a>
+          <a href="#faq" class="hover:text-brand-600">FAQ</a>
+          <a href="blog/how-to-address-an-envelope.html" class="hover:text-brand-600">Blog</a>
+          <a href="#formatter" class="rounded-full bg-brand-600 px-4 py-2 text-white font-semibold text-xs tracking-wide">Launch tool</a>
+        </div>
+      </nav>
       <div class="flex items-center gap-3 text-sm text-brand-600 font-semibold">
         <span class="flex items-center justify-center h-8 w-8 rounded-full bg-brand-50 text-brand-600">1</span>
-        Zero-learning envelope address formatter for compliant international mailings
+        Zero-learning address envelope formatter for compliant international mailings
       </div>
       <div>
         <h1 class="text-3xl lg:text-4xl font-semibold text-slate-900 leading-tight">Envelope address layout, validation, and print-ready preview in one tab</h1>
@@ -236,7 +249,7 @@
   </header>
 
   <main class="max-w-6xl mx-auto px-4 py-10 space-y-10">
-    <section class="grid lg:grid-cols-[420px,1fr] gap-8">
+    <section id="formatter" class="grid lg:grid-cols-[420px,1fr] gap-8">
       <form id="addressForm" class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-8">
         <div class="space-y-3">
           <div class="flex items-center justify-between">
@@ -431,7 +444,7 @@
       </div>
     </section>
 
-    <section class="bg-slate-900 text-white rounded-3xl p-6 space-y-5">
+    <section id="guides" class="bg-slate-900 text-white rounded-3xl p-6 space-y-5">
       <div>
         <h2 class="text-2xl font-semibold">Envelope address best practices</h2>
         <p class="text-slate-300 text-sm">Keep destinations uppercase, avoid punctuation, and reserve the final line for the country when mailing abroad. This tool surfaces those reminders inline.</p>
@@ -442,6 +455,33 @@
         <li>Toggle fonts to test machine readability without changing layout.</li>
         <li>Use the reset button to load fresh sample data for each destination market.</li>
       </ul>
+    </section>
+
+    <section class="bg-white border border-slate-200 rounded-3xl shadow-sm p-6 space-y-6" id="insights">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-2xl font-semibold text-slate-900">Envelope address insights</h2>
+        <p class="text-slate-600 text-sm max-w-2xl">Deep dives into addressing etiquette, postal rules, and international variations. Every article links back to the formatter so you can apply the tips immediately.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <article class="border border-slate-200 rounded-3xl p-5 flex flex-col gap-3 bg-slate-50">
+          <div class="text-xs font-semibold text-amber-600 uppercase tracking-[0.2em]">New</div>
+          <h3 class="text-xl font-semibold text-slate-900">How to address an envelope (with USPS-safe layout)</h3>
+          <p class="text-sm text-slate-600">Learn the exact line order, capitalization rules, and placement guidelines before printing. Includes tips for US, Canada, UK, Australia, and international mailings.</p>
+          <a href="blog/how-to-address-an-envelope.html" class="inline-flex items-center gap-2 text-brand-600 text-sm font-semibold" aria-label="Read how to address an envelope guide">
+            Read the full guide
+            <span aria-hidden="true">→</span>
+          </a>
+        </article>
+        <article class="border border-slate-200 rounded-3xl p-5 flex flex-col gap-3">
+          <h3 class="text-lg font-semibold text-slate-900">Upcoming topics</h3>
+          <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+            <li>Royal Mail vs Canada Post punctuation preferences</li>
+            <li>How USPS machinable letter rules affect envelope sizes</li>
+            <li>International country-line conventions for multilingual mail</li>
+          </ul>
+          <p class="text-xs text-slate-500">Want a topic covered? <a class="text-brand-600 hover:underline" href="mailto:hello@addressenvelope.com">Email us</a>.</p>
+        </article>
+      </div>
     </section>
 
     <section id="faq" class="bg-white border border-slate-200 rounded-3xl shadow-sm p-6 space-y-6">
