@@ -101,6 +101,29 @@
       }
     }
 
+    @media (max-width: 640px) {
+      :root {
+        --preview-scale: 0.58;
+      }
+      header .max-w-6xl {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      #addressForm {
+        padding: 1.25rem;
+      }
+      #envelopePreviewShell {
+        padding: 1.5rem;
+      }
+      #previewViewport {
+        padding-bottom: 1rem;
+        min-height: 320px;
+      }
+      .envelope-canvas {
+        max-width: 100%;
+      }
+    }
+
     @media print {
       .no-print {
         display: none !important;
@@ -218,17 +241,17 @@
 <body class="bg-slate-50 text-slate-900">
   <header class="bg-white border-b border-slate-200" id="top">
     <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-6">
-      <nav class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-600">
+      <nav class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between text-sm text-slate-600">
         <a href="/" class="flex items-center gap-2 text-slate-900 font-semibold text-base" aria-label="Address Envelope home">
           <span class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 font-bold">AE</span>
           Address Envelope
         </a>
-        <div class="flex flex-wrap items-center gap-4">
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <a href="#formatter" class="hover:text-brand-600">Formatter</a>
           <a href="#guides" class="hover:text-brand-600">Guides</a>
           <a href="#faq" class="hover:text-brand-600">FAQ</a>
           <a href="blog/how-to-address-an-envelope.html" class="hover:text-brand-600">Blog</a>
-          <a href="#formatter" class="rounded-full bg-brand-600 px-4 py-2 text-white font-semibold text-xs tracking-wide">Launch tool</a>
+          <a href="#formatter" class="rounded-full bg-brand-600 px-4 py-2 text-white font-semibold text-xs tracking-wide w-full text-center md:w-auto">Launch tool</a>
         </div>
       </nav>
       <div class="flex items-center gap-3 text-sm text-brand-600 font-semibold">
@@ -304,9 +327,18 @@
         </div>
 
         <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold text-slate-900">Recipient (to)</h3>
-            <span class="text-xs text-slate-500">Printed mid face</span>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">Recipient (to)</h3>
+              <span class="text-xs text-slate-500">Printed mid face</span>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <div class="flex-1">
+              <label for="savedRecipientSelect" class="text-xs text-slate-500">Saved recipients</label>
+              <select id="savedRecipientSelect" class="form-input mt-1 hidden"></select>
+            </div>
+            <button type="button" id="saveRecipientBtn" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:border-brand-300">Save current recipient</button>
           </div>
           <div class="space-y-3">
             <div class="space-y-1">
@@ -325,28 +357,41 @@
               <label for="toAddress2" class="text-sm font-medium text-slate-600">Unit / Apt</label>
               <input id="toAddress2" type="text" placeholder="Unit / Apt (optional)" class="form-input" />
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div class="space-y-1">
-                <label for="toCity" class="text-sm font-medium text-slate-600">City / Locality</label>
-                <input id="toCity" type="text" placeholder="City / Locality" class="form-input" />
-              </div>
-              <div class="space-y-1">
-                <label id="toRegionLabel" for="toRegionSelect" class="text-sm font-medium text-slate-600">State / Province</label>
-                <select id="toRegionSelect" class="form-input hidden"></select>
-                <input id="toRegionInput" type="text" placeholder="State / Province" class="form-input" />
-              </div>
-              <div class="space-y-1">
-                <label for="toPostal" class="text-sm font-medium text-slate-600">Postal / ZIP</label>
-                <input id="toPostal" type="text" placeholder="Postal / ZIP" class="form-input" />
-              </div>
-            </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <div class="space-y-1">
+          <label for="toCity" class="text-sm font-medium text-slate-600">City / Locality</label>
+          <input id="toCity" type="text" placeholder="City / Locality" class="form-input" />
+        </div>
+        <div class="space-y-1">
+          <label id="toRegionLabel" for="toRegionSelect" class="text-sm font-medium text-slate-600">State / Province</label>
+          <select id="toRegionSelect" class="form-input hidden"></select>
+          <input id="toRegionInput" type="text" placeholder="State / Province" class="form-input" />
+        </div>
+        <div class="space-y-1">
+          <label for="toPostal" class="text-sm font-medium text-slate-600">Postal / ZIP</label>
+          <input id="toPostal" type="text" placeholder="Postal / ZIP" class="form-input" />
+        </div>
+      </div>
           </div>
         </div>
 
         <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold text-slate-900">Sender (return)</h3>
-            <span class="text-xs text-slate-500">Printed top-left</span>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">Sender (return)</h3>
+              <span class="text-xs text-slate-500">Printed top-left</span>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-slate-500">
+              <input type="checkbox" id="rememberSender" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
+              Remember sender on this device
+            </label>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <div class="flex-1">
+              <label for="savedSenderSelect" class="text-xs text-slate-500">Saved senders</label>
+              <select id="savedSenderSelect" class="form-input mt-1 hidden"></select>
+            </div>
+            <button type="button" id="saveSenderBtn" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:border-brand-300">Save current sender</button>
           </div>
           <div class="space-y-3">
             <div class="space-y-1">
@@ -365,11 +410,11 @@
               <label for="fromAddress2" class="text-sm font-medium text-slate-600">Unit / Apt</label>
               <input id="fromAddress2" type="text" placeholder="Unit / Apt (optional)" class="form-input" />
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div class="space-y-1">
-                <label for="fromCity" class="text-sm font-medium text-slate-600">City / Locality</label>
-                <input id="fromCity" type="text" placeholder="City" class="form-input" />
-              </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <div class="space-y-1">
+          <label for="fromCity" class="text-sm font-medium text-slate-600">City / Locality</label>
+          <input id="fromCity" type="text" placeholder="City" class="form-input" />
+        </div>
               <div class="space-y-1">
                 <label id="fromRegionLabel" for="fromRegionSelect" class="text-sm font-medium text-slate-600">State / Province</label>
                 <select id="fromRegionSelect" class="form-input hidden"></select>
@@ -392,19 +437,26 @@
             <h2 class="text-lg font-semibold text-slate-900">Envelope preview</h2>
             <p class="text-xs text-slate-500">True-to-size surface with live formatted envelope address lines.</p>
           </div>
-          <div class="flex flex-wrap gap-2 no-print">
-            <button type="button" id="copyRecipientBtn" class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand-300">
-              <span class="btn-label">Copy recipient</span>
-            </button>
-            <button type="button" id="copySenderBtn" class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand-300">
-              <span class="btn-label">Copy sender</span>
-            </button>
-            <button type="button" id="printBtn" class="inline-flex items-center gap-2 rounded-full bg-brand-600 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-brand-500">
-              <span>Print / Save PDF</span>
-            </button>
+      <div class="flex flex-col sm:flex-row flex-wrap gap-2 no-print w-full">
+        <button type="button" id="copyRecipientBtn" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand-300 w-full sm:w-auto">
+          <span class="btn-label">Copy recipient</span>
+        </button>
+        <button type="button" id="copySenderBtn" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand-300 w-full sm:w-auto">
+          <span class="btn-label">Copy sender</span>
+        </button>
+        <button type="button" id="printBtn" class="inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-brand-500 w-full sm:w-auto">
+          <span>Print / Save PDF</span>
+        </button>
+      </div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-xs text-slate-500" id="sizeHelper">Meets USPS machinable letter bounds (min 3.5×5 in, max 6.125×11.5 in × 0.25 in).</div>
+          <div class="no-print flex flex-wrap items-center gap-2 text-xs text-slate-500">
+            <span class="font-medium text-slate-700">Enjoying the layout?</span>
+            <a href="https://twitter.com/intent/tweet?text=Format+and+print+an+envelope+online+for+free+via+https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:border-brand-300"><img src="assets/icon-x.svg" alt="Share on X" class="h-4 w-4" />Share</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:border-brand-300"><img src="assets/icon-facebook.svg" alt="Share on Facebook" class="h-4 w-4" />Share</a>
           </div>
         </div>
-        <div class="text-xs text-slate-500" id="sizeHelper">Meets USPS machinable letter bounds (min 3.5×5 in, max 6.125×11.5 in × 0.25 in).</div>
         <div id="previewViewport" class="w-full overflow-auto flex justify-center">
           <div class="relative envelope-canvas bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.06),_rgba(15,23,42,0))] rounded-3xl border border-slate-200" id="envelopeCanvas">
             <div class="absolute inset-0 bg-white rounded-3xl"></div>
@@ -510,6 +562,14 @@
         <a class="text-brand-600 hover:underline" href="https://www.royalmail.com/business/system/files/royal-mail-clear-addressing-guide.pdf" target="_blank" rel="noopener">Royal Mail Clear Addressing</a>,
         <a class="text-brand-600 hover:underline" href="https://www.canadapost-postescanada.ca/cpc/en/support/articles/address-letter-mail.page" target="_blank" rel="noopener">Canada Post addressing guide</a>.
       </div>
+    </section>
+    <section class="flex flex-col sm:flex-row gap-3">
+      <a href="#formatter" class="flex-1 text-center rounded-full bg-brand-600 text-white font-semibold py-3">Back to formatter</a>
+      <a href="#top" class="flex-1 text-center rounded-full border border-slate-200 text-slate-700 font-semibold py-3">Back to top</a>
+    </section>
+    <section class="flex flex-col sm:flex-row gap-3">
+      <a href="https://twitter.com/intent/tweet?text=Format+and+print+an+envelope+online+for+free+via+https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="flex-1 text-center rounded-full border border-slate-200 text-slate-700 font-semibold py-3 hover:border-brand-300">Share on X</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="flex-1 text-center rounded-full border border-slate-200 text-slate-700 font-semibold py-3 hover:border-brand-300">Share on Facebook</a>
     </section>
   </main>
 
@@ -621,6 +681,13 @@
     ];
 
     let activeCountry = 'US';
+
+    const STORAGE_KEYS = {
+      to: { remember: 'ae_remember_recipient', data: 'ae_recipient_data' },
+      from: { remember: 'ae_remember_sender', data: 'ae_sender_data' },
+      toList: 'ae_recipient_list',
+      fromList: 'ae_sender_list'
+    };
 
     const patterns = {
       usZip: /^\d{5}(-\d{4})?$/,
@@ -748,6 +815,32 @@
       };
     }
 
+    function fillFields(prefix, data = {}) {
+      document.getElementById(`${prefix}Name`).value = data.name || '';
+      document.getElementById(`${prefix}Org`).value = data.organization || '';
+      document.getElementById(`${prefix}Address1`).value = data.address1 || '';
+      document.getElementById(`${prefix}Address2`).value = data.address2 || '';
+      document.getElementById(`${prefix}City`).value = data.city || '';
+      document.getElementById(`${prefix}Postal`).value = data.postal || '';
+      const regionSelect = document.getElementById(`${prefix}RegionSelect`);
+      const regionInput = document.getElementById(`${prefix}RegionInput`);
+      if (!regionSelect.classList.contains('hidden') && data.region) {
+        const optionExists = Array.from(regionSelect.options).some(opt => opt.value === data.region);
+        if (optionExists) {
+          regionSelect.value = data.region;
+        }
+      } else if (data.region) {
+        regionInput.value = data.region;
+      }
+      if (prefix === 'to' && data.destinationCountry) {
+        const intlSelect = document.getElementById('intlCountrySelect');
+        const hasDest = Array.from(intlSelect.options).some(opt => opt.value === data.destinationCountry);
+        if (hasDest) {
+          intlSelect.value = data.destinationCountry;
+        }
+      }
+    }
+
     function getRegionValue(prefix) {
       const select = document.getElementById(`${prefix}RegionSelect`);
       if (!select.classList.contains('hidden')) {
@@ -772,6 +865,7 @@
       renderWarnings([...recipient.warnings, ...sender.warnings]);
       adjustPlacements();
       updateCopyPayload(recipient.lines, sender.lines);
+      persistRememberedData('from', fromData);
     }
 
     function renderAddress(elementId, lines) {
@@ -970,11 +1064,16 @@
       document.getElementById('envelopeSizeSelect').value = '#10';
       document.getElementById('fontFamilySelect').value = 'system';
       activeCountry = 'US';
+      document.getElementById('rememberSender').checked = false;
+      clearRememberedData('from');
       setFontFamily('system');
       populateIntlOptions();
       setEnvelopeSize('#10');
       configureRegionFields('US');
       hydrateSampleData();
+      loadRememberedData('from');
+      populateSavedSelect('to');
+      populateSavedSelect('from');
       handleFormChange();
     }
 
@@ -984,6 +1083,8 @@
       setEnvelopeSize('#10');
       configureRegionFields('US');
       hydrateSampleData();
+      populateSavedSelect('to');
+      populateSavedSelect('from');
       handleFormChange();
       setFontFamily('system');
       updatePreviewScale();
@@ -1000,6 +1101,11 @@
       document.getElementById('copySenderBtn').addEventListener('click', () => copyText('sender'));
       document.getElementById('printBtn').addEventListener('click', printEnvelope);
       document.getElementById('resetBtn').addEventListener('click', resetForm);
+      document.getElementById('rememberSender').addEventListener('change', () => persistRememberedData('from', gatherFields('from')));
+      document.getElementById('saveRecipientBtn').addEventListener('click', () => saveAddressToList('to'));
+      document.getElementById('saveSenderBtn').addEventListener('click', () => saveAddressToList('from'));
+      document.getElementById('savedRecipientSelect').addEventListener('change', (e) => applySavedSelection('to', e.target.value));
+      document.getElementById('savedSenderSelect').addEventListener('change', (e) => applySavedSelection('from', e.target.value));
       window.addEventListener('resize', updatePreviewScale);
     }
 
@@ -1007,6 +1113,129 @@
       bindEvents();
       init();
     });
+
+    function persistRememberedData(prefix, payload) {
+      const checkbox = document.getElementById(prefix === 'to' ? 'rememberRecipient' : 'rememberSender');
+      if (!checkbox) return;
+      try {
+        const storage = STORAGE_KEYS[prefix];
+        if (!storage || !window.localStorage) return;
+        if (checkbox.checked) {
+          localStorage.setItem(storage.remember, 'true');
+          localStorage.setItem(storage.data, JSON.stringify(payload));
+        } else {
+          localStorage.removeItem(storage.remember);
+          localStorage.removeItem(storage.data);
+        }
+      } catch (err) {
+        console.warn('Storage unavailable', err);
+      }
+    }
+
+    function loadRememberedData(prefix) {
+      const checkbox = document.getElementById(prefix === 'to' ? 'rememberRecipient' : 'rememberSender');
+      if (!checkbox) return;
+      try {
+        const storage = STORAGE_KEYS[prefix];
+        if (!storage || !window.localStorage) return;
+        const remember = localStorage.getItem(storage.remember) === 'true';
+        checkbox.checked = remember;
+        if (remember) {
+          const payload = localStorage.getItem(storage.data);
+          if (payload) {
+            fillFields(prefix, JSON.parse(payload));
+          }
+        }
+      } catch (err) {
+        console.warn('Storage unavailable', err);
+      }
+    }
+
+    function clearRememberedData(prefix) {
+      try {
+        const storage = STORAGE_KEYS[prefix];
+        if (!storage || !window.localStorage) return;
+        localStorage.removeItem(storage.remember);
+        localStorage.removeItem(storage.data);
+      } catch (err) {
+        console.warn('Storage unavailable', err);
+      }
+    }
+
+    function getListKey(prefix) {
+      return prefix === 'to' ? STORAGE_KEYS.toList : STORAGE_KEYS.fromList;
+    }
+
+    function getSavedList(prefix) {
+      try {
+        const key = getListKey(prefix);
+        const raw = window.localStorage ? localStorage.getItem(key) : null;
+        return raw ? JSON.parse(raw) : [];
+      } catch (err) {
+        console.warn('List load failed', err);
+        return [];
+      }
+    }
+
+    function setSavedList(prefix, list) {
+      try {
+        const key = getListKey(prefix);
+        if (window.localStorage && key) {
+          localStorage.setItem(key, JSON.stringify(list));
+        }
+      } catch (err) {
+        console.warn('List save failed', err);
+      }
+    }
+
+    function makeAddressLabel(data, prefix) {
+      const name = data.name || data.organization || (prefix === 'to' ? 'Recipient' : 'Sender');
+      const city = data.city || '';
+      const postal = data.postal || '';
+      const parts = [name, city, postal].filter(Boolean);
+      return parts.join(' · ').slice(0, 60) || 'Saved address';
+    }
+
+    function saveAddressToList(prefix) {
+      const data = gatherFields(prefix);
+      const hasCore = data.name || data.organization || data.address1 || data.city || data.postal;
+      if (!hasCore) {
+        alert('Please enter at least a name or address before saving.');
+        return;
+      }
+      const list = getSavedList(prefix);
+      const entry = { id: Date.now().toString(), label: makeAddressLabel(data, prefix), payload: data };
+      const updated = [entry, ...list].slice(0, 20);
+      setSavedList(prefix, updated);
+      populateSavedSelect(prefix);
+    }
+
+    function populateSavedSelect(prefix) {
+      const select = document.getElementById(prefix === 'to' ? 'savedRecipientSelect' : 'savedSenderSelect');
+      if (!select) return;
+      const list = getSavedList(prefix);
+      if (!list.length) {
+        select.classList.add('hidden');
+        select.innerHTML = '';
+        return;
+      }
+      select.classList.remove('hidden');
+      const options = ['<option value="">Choose saved address</option>'];
+      list.forEach(item => {
+        options.push(`<option value="${item.id}">${escapeHtml(item.label)}</option>`);
+      });
+      select.innerHTML = options.join('');
+      select.value = '';
+    }
+
+    function applySavedSelection(prefix, id) {
+      if (!id) return;
+      const list = getSavedList(prefix);
+      const match = list.find(item => item.id === id);
+      if (!match) return;
+      fillFields(prefix, match.payload || {});
+      handleFormChange();
+    }
   </script>
 </body>
 </html>
