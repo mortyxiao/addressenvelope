@@ -3,20 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Address Envelope Formatter | Real Envelope Preview</title>
-  <meta name="description" content="Address Envelope formatting helper that previews sender and recipient placement on a true-to-scale envelope with instant validation for US, Canada, UK, Australia, and international mail." />
-  <meta name="keywords" content="address envelope, envelope formatter, envelope preview, international mailing tool" />
+  <title>Address Envelope Formatter | USPS-safe Preview & Print (2025)</title>
+  <meta name="description" content="Updated for 2025 USPS addressing: preview sender/recipient placement, safe zone, and print 1:1 PDFs for US/CA/UK/AU." />
+  <meta name="keywords" content="" />
   <meta name="robots" content="index,follow" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="canonical" href="https://addressenvelope.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://addressenvelope.com/" />
-  <meta property="og:title" content="Address Envelope Formatter – Real-size Envelope Preview" />
-  <meta property="og:description" content="Instantly format sender and recipient lines, place them on a true-to-scale envelope, and export compliant PDFs for US, UK, CA, AU, or international mailings." />
+  <meta property="og:title" content="Address Envelope Formatter – Real-size Envelope Preview (2025)" />
+  <meta property="og:description" content="Updated for 2025 USPS addressing: preview sender/recipient placement, safe zone, and print 1:1 PDFs for US/CA/UK/AU." />
+  <meta property="og:image" content="https://addressenvelope.com/assets/envelope-safe-zone.svg" />
+  <meta property="og:image:alt" content="Envelope diagram showing USPS safe zone, return address, and stamp placement" />
   <meta property="og:site_name" content="Address Envelope" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Address Envelope Formatter – Real-size Envelope Preview" />
-  <meta name="twitter:description" content="Country-aware address envelope tool with USPS safe zone overlay, copy-ready text, and print-to-PDF." />
+  <meta name="twitter:title" content="Address Envelope Formatter – Real-size Envelope Preview (2025)" />
+  <meta name="twitter:description" content="Updated for 2025 USPS addressing: preview sender/recipient placement, safe zone, and print 1:1 PDFs for US/CA/UK/AU." />
+  <meta name="twitter:image" content="https://addressenvelope.com/assets/envelope-safe-zone.svg" />
+  <meta name="twitter:image:alt" content="Envelope diagram showing USPS safe zone, return address, and stamp placement" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="icon" type="image/svg+xml" href="/assets/ae-icon.svg" />
   <!-- Google tag (gtag.js) -->
@@ -183,10 +187,19 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "WebSite",
+          "@id": "https://addressenvelope.com/#website",
+          "url": "https://addressenvelope.com/",
+          "name": "Address Envelope",
+          "publisher": { "@id": "https://addressenvelope.com/#org" }
+        },
+        {
           "@type": "Organization",
           "@id": "https://addressenvelope.com/#org",
           "name": "Address Envelope",
-          "url": "https://addressenvelope.com/"
+          "url": "https://addressenvelope.com/",
+          "logo": { "@type": "ImageObject", "url": "https://addressenvelope.com/assets/ae-icon.svg" },
+          "image": "https://addressenvelope.com/assets/envelope-safe-zone.svg"
         },
         {
           "@type": "WebApplication",
@@ -194,6 +207,7 @@
           "name": "Address Envelope Formatter",
           "url": "https://addressenvelope.com/",
           "description": "Country-aware envelope address formatter with live preview, USPS-safe placement, and print-to-PDF export.",
+          "image": "https://addressenvelope.com/assets/envelope-safe-zone.svg",
           "applicationCategory": "UtilitiesApplication",
           "operatingSystem": "Web",
           "publisher": { "@id": "https://addressenvelope.com/#org" },
@@ -231,7 +245,38 @@
                 "@type": "Answer",
                 "text": "No. All formatting happens locally in your browser, and copy/print commands never send data to a server."
               }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I pre-fill USPS sample data?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Use Reset demo data to load ready-to-print USPS-aligned sender and recipient lines for quick testing."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does the print view keep the USPS safe zone?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Print mode preserves the safe-zone overlay and sets @page dimensions so your PDF or printer output stays 1:1 with the selected envelope size."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I add the international country line?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Switch the destination to International, pick the country for the last line, and the formatter adds it in uppercase beneath the city/region/postal line."
+              }
             }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://addressenvelope.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Formatter", "item": "https://addressenvelope.com/#formatter" }
           ]
         }
       ]
@@ -263,6 +308,15 @@
         <p class="mt-4 text-lg text-slate-600 max-w-3xl">
           Choose a country, drop in sender and recipient data, and instantly see a real-scale envelope preview with the correct envelope address placement, USPS-safe read zone, and printable output. Copy multi-line text or print to PDF in one tap.
         </p>
+        <div class="mt-4 grid gap-2 text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <div class="font-semibold text-slate-900">Fast path to a USPS-safe envelope</div>
+          <ul class="list-disc list-inside space-y-1">
+            <li>Select country + envelope size (#10, DL, C6, A7) to set @page and safe zone.</li>
+            <li>Paste sender/recipient; tool auto-cases and formats city/state/postal.</li>
+            <li>Toggle fonts and safe zone; copy recipient/sender blocks or print to PDF 1:1.</li>
+            <li>Need a starting point? Use “Reset demo data” for USPS-ready sample lines.</li>
+          </ul>
+        </div>
       </div>
       <div class="flex flex-wrap gap-4 text-sm text-slate-600">
         <div class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>Offline by default</div>
@@ -453,8 +507,8 @@
           <div class="text-xs text-slate-500" id="sizeHelper">Meets USPS machinable letter bounds (min 3.5×5 in, max 6.125×11.5 in × 0.25 in).</div>
           <div class="no-print flex flex-wrap items-center gap-2 text-xs text-slate-500">
             <span class="font-medium text-slate-700">Enjoying the layout?</span>
-            <a href="https://twitter.com/intent/tweet?text=Format+and+print+an+envelope+online+for+free+via+https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:border-brand-300"><img src="assets/icon-x.svg" alt="Share on X" class="h-4 w-4" />Share</a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:border-brand-300"><img src="assets/icon-facebook.svg" alt="Share on Facebook" class="h-4 w-4" />Share</a>
+            <a href="https://twitter.com/intent/tweet?text=Format+and+print+an+envelope+online+for+free+via+https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:border-brand-300"><img src="assets/icon-x.svg" alt="Share on X" class="h-4 w-4" width="16" height="16" loading="lazy" />Share</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Faddressenvelope.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:border-brand-300"><img src="assets/icon-facebook.svg" alt="Share on Facebook" class="h-4 w-4" width="16" height="16" loading="lazy" />Share</a>
           </div>
         </div>
         <div id="previewViewport" class="w-full overflow-auto flex justify-center">
@@ -554,6 +608,18 @@
         <div class="space-y-1">
           <dt class="font-semibold text-slate-900">Does the tool store or upload my data?</dt>
           <dd>No. Everything renders inside your browser. Copy and print actions stay local, and you can reset the form anytime to clear inputs.</dd>
+        </div>
+        <div class="space-y-1">
+          <dt class="font-semibold text-slate-900">Can I pre-fill USPS sample data?</dt>
+          <dd>Yes. Click “Reset demo data” to load a USPS-aligned sender and recipient with proper casing, so you can test copy/print instantly.</dd>
+        </div>
+        <div class="space-y-1">
+          <dt class="font-semibold text-slate-900">Does the print view keep the USPS safe zone?</dt>
+          <dd>Print mode preserves the safe-zone overlay and sets envelope dimensions in <code>@page</code>, keeping barcodes clear on PDF and paper.</dd>
+        </div>
+        <div class="space-y-1">
+          <dt class="font-semibold text-slate-900">How do I add the international country line?</dt>
+          <dd>Choose “International,” pick the destination country in the last-line dropdown, and the formatter appends it in uppercase below the city/region/postal line.</dd>
         </div>
       </dl>
       <div class="text-xs text-slate-500">
